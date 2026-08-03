@@ -182,6 +182,9 @@ def main():
         print(f"Failed to fetch/parse news brief: {e}", file=sys.stderr)
         sys.exit(1)
 
+    with open("brief.json", "w") as f:
+        json.dump(brief, f)
+
     print("Building email...")
     html = build_email_html(brief)
 
