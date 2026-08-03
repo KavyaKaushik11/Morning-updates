@@ -7,11 +7,19 @@
     <description>A daily spoken news brief: world headlines, South Africa, tech, and markets.</description>
     <itunes:author>Morning Brief</itunes:author>
     <itunes:explicit>false</itunes:explicit>
+    <itunes:category text="News"/>
+    <itunes:image href="https://kavyakaushik11.github.io/Morning-updates/cover.jpg"/>
+    <image>
+      <url>https://kavyakaushik11.github.io/Morning-updates/cover.jpg</url>
+      <title>Your Morning Brief</title>
+      <link>https://kavyakaushik11.github.io/Morning-updates</link>
+    </image>
+    <itunes:owner><itunes:name>Morning Brief</itunes:name><itunes:email>kavyaashi10@gmail.com</itunes:email></itunes:owner>
     
         <item>
           <title>Morning Brief - 03 August 2026</title>
           <pubDate>Mon, 03 Aug 2026 06:00:00 GMT</pubDate>
-          <enclosure url="https://kavyakaushik11.github.io/Morning-updates/episodes/2026-08-03.mp3" length="7526400" type="audio/mpeg"/>
+          <enclosure url="https://kavyakaushik11.github.io/Morning-updates/episodes/2026-08-03.mp3" length="6888192" type="audio/mpeg"/>
           <guid isPermaLink="false">2026-08-03</guid>
         </item>
   </channel>
