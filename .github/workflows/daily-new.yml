@@ -57,6 +57,7 @@ jobs:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           PAGES_BASE_URL: https://kavyakaushik11.github.io/Morning-updates
           PUBLIC_DIR: public
+          PODCAST_OWNER_EMAIL: ${{ secrets.GMAIL_ADDRESS }}
         run: python podcast.py
 
       - name: Publish podcast to gh-pages

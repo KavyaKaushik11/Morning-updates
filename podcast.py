@@ -23,6 +23,7 @@ import requests
 OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY")
 PAGES_BASE_URL = os.environ.get("PAGES_BASE_URL")
 PUBLIC_DIR = os.environ.get("PUBLIC_DIR", "public")
+PODCAST_OWNER_EMAIL = os.environ.get("PODCAST_OWNER_EMAIL")
 
 RETENTION_DAYS = 30
 TTS_MODEL = "gpt-4o-mini-tts"
@@ -95,7 +96,7 @@ def prune_old_episodes(episodes_dir, retention_days):
             os.remove(path)
 
 
-def build_feed(episodes_dir, feed_path, base_url):
+def build_feed(episodes_dir, feed_path, base_url, owner_email=None):
     items = []
     for path in sorted(glob.glob(os.path.join(episodes_dir, "*.mp3")), reverse=True):
         date_str, episode_date = episode_date_from_filename(path)
@@ -111,6 +112,8 @@ def build_feed(episodes_dir, feed_path, base_url):
           <guid isPermaLink="false">{date_str}</guid>
         </item>""")
 
+    owner_tag = f"<itunes:owner><itunes:name>Morning Brief</itunes:name><itunes:email>{owner_email}</itunes:email></itunes:owner>" if owner_email else ""
+
     feed_xml = f"""<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
   <channel>
@@ -120,6 +123,14 @@ def build_feed(episodes_dir, feed_path, base_url):
     <description>A daily spoken news brief: world headlines, South Africa, tech, and markets.</description>
     <itunes:author>Morning Brief</itunes:author>
     <itunes:explicit>false</itunes:explicit>
+    <itunes:category text="News"/>
+    <itunes:image href="{base_url}/cover.jpg"/>
+    <image>
+      <url>{base_url}/cover.jpg</url>
+      <title>Your Morning Brief</title>
+      <link>{base_url}</link>
+    </image>
+    {owner_tag}
     {''.join(items)}
   </channel>
 </rss>
@@ -152,7 +163,7 @@ def main():
     prune_old_episodes(episodes_dir, RETENTION_DAYS)
 
     print("Rebuilding feed.xml...")
-    build_feed(episodes_dir, os.path.join(PUBLIC_DIR, "feed.xml"), PAGES_BASE_URL)
+    build_feed(episodes_dir, os.path.join(PUBLIC_DIR, "feed.xml"), PAGES_BASE_URL, PODCAST_OWNER_EMAIL)
 
     print("Done - podcast episode published.")
 
