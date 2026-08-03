@@ -2,10 +2,16 @@ name: Daily Morning Brief
 
 on:
   schedule:
-    # 04:00 UTC = 06:00 SAST (Cape Town/Joburg, no DST).
-    # Adjust the hour below if you want a different wake-up time.
-    - cron: "0 4 * * *"
+    # 03:47 UTC = ~05:47 SAST (Cape Town/Joburg, no DST). Off the top of the
+    # hour on purpose: GitHub Actions scheduled runs queue behind every other
+    # repo firing at round hours like 0 4 * * *, which caused multi-hour
+    # delays. GitHub does not guarantee exact timing for scheduled workflows,
+    # but avoiding round hours meaningfully reduces queuing delay.
+    - cron: "47 3 * * *"
   workflow_dispatch: {}   # lets you trigger it manually from the Actions tab to test
+
+permissions:
+  contents: write
 
 jobs:
   send-brief:
@@ -29,3 +35,39 @@ jobs:
           GMAIL_APP_PASSWORD: ${{ secrets.GMAIL_APP_PASSWORD }}
           RECIPIENT_EMAIL: ${{ secrets.RECIPIENT_EMAIL }}
         run: python news_agent.py
+
+      - name: Prepare public/ (gh-pages checkout)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          REPO_URL="https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+          if git clone --branch gh-pages --single-branch "$REPO_URL" public 2>/dev/null; then
+            echo "Checked out existing gh-pages branch"
+          else
+            echo "gh-pages branch not found, initializing it"
+            mkdir public
+            cd public
+            git init -q
+            git checkout -q -b gh-pages
+            mkdir episodes
+          fi
+
+      - name: Generate podcast episode and update feed
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          PAGES_BASE_URL: https://kavyakaushik11.github.io/Morning-updates
+          PUBLIC_DIR: public
+        run: python podcast.py
+
+      - name: Publish podcast to gh-pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cd public
+          git config user.name "morning-brief-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git remote set-url origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git" 2>/dev/null || \
+            git remote add origin "https://x-access-token:${GH_TOKEN}@github.com/${{ github.repository }}.git"
+          git add episodes feed.xml
+          git commit -m "Publish podcast episode $(date -u +%Y-%m-%d)" || echo "Nothing new to commit"
+          git push origin gh-pages
