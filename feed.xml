@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:itunes="http://www.itunes.com/dtds/podcast-1.0.dtd">
+  <channel>
+    <title>Your Morning Brief</title>
+    <link>https://kavyakaushik11.github.io/Morning-updates</link>
+    <language>en-us</language>
+    <description>A daily spoken news brief: world headlines, South Africa, tech, and markets.</description>
+    <itunes:author>Morning Brief</itunes:author>
+    <itunes:explicit>false</itunes:explicit>
+  </channel>
+</rss>
