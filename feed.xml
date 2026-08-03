@@ -7,5 +7,12 @@
     <description>A daily spoken news brief: world headlines, South Africa, tech, and markets.</description>
     <itunes:author>Morning Brief</itunes:author>
     <itunes:explicit>false</itunes:explicit>
+    
+        <item>
+          <title>Morning Brief - 03 August 2026</title>
+          <pubDate>Mon, 03 Aug 2026 06:00:00 GMT</pubDate>
+          <enclosure url="https://kavyakaushik11.github.io/Morning-updates/episodes/2026-08-03.mp3" length="7526400" type="audio/mpeg"/>
+          <guid isPermaLink="false">2026-08-03</guid>
+        </item>
   </channel>
 </rss>
