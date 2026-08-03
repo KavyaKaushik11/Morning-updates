@@ -26,7 +26,13 @@ PUBLIC_DIR = os.environ.get("PUBLIC_DIR", "public")
 
 RETENTION_DAYS = 30
 TTS_MODEL = "gpt-4o-mini-tts"
-TTS_VOICE = "onyx"  # deeper, news-anchor style voice
+TTS_VOICE = "onyx"  # try also: "fable", "echo", "nova" - just swap and re-run to compare
+TTS_INSTRUCTIONS = (
+    "Deliver this like a professional international news anchor - BBC World Service or "
+    "NPR Morning Edition style. Calm, measured pacing with brief natural pauses between "
+    "stories. Warm but understated authority, not chipper or robotic. Slight emphasis on "
+    "names and numbers."
+)
 
 
 def load_brief(path="brief.json"):
@@ -35,21 +41,23 @@ def load_brief(path="brief.json"):
         return json.load(f)
 
 
+def speak_section(intro, items):
+    story_lines = " ".join(f"{item['headline']}. {item['detail']}" for item in items)
+    return f"{intro} {story_lines}"
+
+
 def brief_to_script(brief):
-    lines = ["Good morning. Here's your morning brief."]
-    sections = [
-        ("World headlines", brief["global_headlines"]),
-        ("South Africa", brief["south_africa"]),
-        ("Tech", brief["tech"]),
-        ("Markets and finance", brief["finance"]),
+    parts = [
+        "Good morning. Here's your morning brief.",
+        speak_section("Let's start with the world headlines.", brief["global_headlines"]),
+        speak_section("Now, over to South Africa.", brief["south_africa"]),
+        speak_section("In tech news,", brief["tech"]),
+        speak_section("And finally, markets and finance.", brief["finance"]),
+        "Before you go, here's something to carry into your day.",
+        brief["affirmation"],
+        "That's your morning brief. Have a great day.",
     ]
-    for title, items in sections:
-        lines.append(f"{title}.")
-        for item in items:
-            lines.append(f"{item['headline']}. {item['detail']}")
-    lines.append("And to close:")
-    lines.append(brief["affirmation"])
-    return "\n".join(lines)
+    return "\n\n".join(parts)
 
 
 def synthesize_speech(text, out_path):
@@ -60,6 +68,7 @@ def synthesize_speech(text, out_path):
             "model": TTS_MODEL,
             "voice": TTS_VOICE,
             "input": text,
+            "instructions": TTS_INSTRUCTIONS,
             "response_format": "mp3",
         },
         timeout=120,
