@@ -17,6 +17,12 @@
     <itunes:owner><itunes:name>Morning Brief</itunes:name><itunes:email>kavyaashi10@gmail.com</itunes:email></itunes:owner>
     
         <item>
+          <title>Morning Brief - 11 August 2026</title>
+          <pubDate>Tue, 11 Aug 2026 06:00:00 GMT</pubDate>
+          <enclosure url="https://kavyakaushik11.github.io/Morning-updates/episodes/2026-08-11.mp3" length="6633600" type="audio/mpeg"/>
+          <guid isPermaLink="false">2026-08-11</guid>
+        </item>
+        <item>
           <title>Morning Brief - 10 August 2026</title>
           <pubDate>Mon, 10 Aug 2026 06:00:00 GMT</pubDate>
           <enclosure url="https://kavyakaushik11.github.io/Morning-updates/episodes/2026-08-10.mp3" length="6660864" type="audio/mpeg"/>
